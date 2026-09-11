@@ -131,6 +131,12 @@ python examples/wrong_retrieval.py
 
 Each evaluation case is a labeled retrieval example, not a production dataset:
 
+### Dataset Notice
+
+All documents, queries, relevance labels, and evaluation examples in this repository are synthetic and were created solely for demonstrating retrieval and RAG evaluation techniques.
+
+They are not derived from any production system, proprietary dataset, confidential information, or internal business process.
+
 ```json
 {
   "query_id": "policy-001",
