@@ -1,0 +1,50 @@
+[
+  {
+    "chunk_id": "policy-cancel-01",
+    "title": "Customer Agreement — Cancellation",
+    "text": "Cancellation requires 30 days notice before the requested termination date.",
+    "metadata": {"document": "customer-agreement", "section": "cancellation"}
+  },
+  {
+    "chunk_id": "policy-renew-01",
+    "title": "Customer Agreement — Renewal",
+    "text": "The agreement renews automatically for successive 12 month terms unless either party gives 60 days notice.",
+    "metadata": {"document": "customer-agreement", "section": "renewal"}
+  },
+  {
+    "chunk_id": "billing-refund-01",
+    "title": "Billing Policy — Refunds",
+    "text": "Approved refunds are processed within 10 business days after review is completed.",
+    "metadata": {"document": "billing-policy", "section": "refunds"}
+  },
+  {
+    "chunk_id": "billing-payment-01",
+    "title": "Billing Policy — Payment Terms",
+    "text": "Invoices are due within 30 calendar days of the invoice date.",
+    "metadata": {"document": "billing-policy", "section": "payment"}
+  },
+  {
+    "chunk_id": "security-retention-01",
+    "title": "Security Standard — Log Retention",
+    "text": "Production security logs must be retained for 365 days.",
+    "metadata": {"document": "security-standard", "section": "retention"}
+  },
+  {
+    "chunk_id": "security-session-01",
+    "title": "Security Standard — Session Timeout",
+    "text": "Administrative web sessions expire after 15 minutes of inactivity.",
+    "metadata": {"document": "security-standard", "section": "sessions"}
+  },
+  {
+    "chunk_id": "support-critical-01",
+    "title": "Support SLA — Critical Incident",
+    "text": "Priority 1 incidents have a 15 minute initial response objective.",
+    "metadata": {"document": "support-sla", "section": "priority-1"}
+  },
+  {
+    "chunk_id": "support-standard-01",
+    "title": "Support SLA — Standard Incident",
+    "text": "Priority 3 incidents have a 4 business hour initial response objective.",
+    "metadata": {"document": "support-sla", "section": "priority-3"}
+  }
+]

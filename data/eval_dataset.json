@@ -1,0 +1,44 @@
+[
+  {
+    "query_id": "policy-001",
+    "question": "What is the cancellation notice period?",
+    "relevant_chunk_ids": ["policy-cancel-01"],
+    "relevance": {"policy-cancel-01": 3},
+    "expected_facts": ["Cancellation requires 30 days notice."]
+  },
+  {
+    "query_id": "policy-002",
+    "question": "How much notice is required to stop automatic renewal?",
+    "relevant_chunk_ids": ["policy-renew-01"],
+    "relevance": {"policy-renew-01": 3},
+    "expected_facts": ["60 days notice is required to prevent renewal."]
+  },
+  {
+    "query_id": "billing-001",
+    "question": "How long does an approved refund take?",
+    "relevant_chunk_ids": ["billing-refund-01"],
+    "relevance": {"billing-refund-01": 3},
+    "expected_facts": ["Approved refunds are processed within 10 business days."]
+  },
+  {
+    "query_id": "security-001",
+    "question": "How long are production security logs retained?",
+    "relevant_chunk_ids": ["security-retention-01"],
+    "relevance": {"security-retention-01": 3},
+    "expected_facts": ["Production security logs are retained for 365 days."]
+  },
+  {
+    "query_id": "security-002",
+    "question": "When does an inactive admin session expire?",
+    "relevant_chunk_ids": ["security-session-01"],
+    "relevance": {"security-session-01": 3},
+    "expected_facts": ["Administrative sessions expire after 15 minutes of inactivity."]
+  },
+  {
+    "query_id": "support-001",
+    "question": "What is the initial response objective for a Priority 1 incident?",
+    "relevant_chunk_ids": ["support-critical-01"],
+    "relevance": {"support-critical-01": 3},
+    "expected_facts": ["Priority 1 incidents have a 15 minute initial response objective."]
+  }
+]

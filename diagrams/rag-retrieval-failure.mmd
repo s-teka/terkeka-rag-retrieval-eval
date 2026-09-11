@@ -1,0 +1,10 @@
+flowchart LR
+    Q[Question] --> R[Retriever]
+    R --> W[Wrong Chunk]
+    W --> L[LLM / Answer Generator]
+    L --> A[Confident Wrong Answer]
+
+    Q2[Question] --> R2[Retriever]
+    R2 --> C[Correct Chunk]
+    C --> L2[LLM / Answer Generator]
+    L2 --> G[Grounded Answer]
