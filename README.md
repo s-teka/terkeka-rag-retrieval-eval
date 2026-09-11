@@ -8,7 +8,7 @@ Reproducible retrieval-evaluation examples for Terkeka Article 01 — *When RAG 
 
 **When RAG Sounds Right but Retrieves Wrong**
 
-Canonical article: https://terkeka.com/<ARTICLE-01-SLUG>
+Canonical article: https://terkeka.com/articles/when-rag-sounds-right-but-retrieves-wrong/
 
 > This repository is a companion implementation for a Terkeka engineering article. The article explains the engineering problem and reasoning; this repository provides the reproducible dataset, code, metrics, tests, and results.
 
