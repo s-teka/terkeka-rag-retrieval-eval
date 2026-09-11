@@ -1,52 +1,79 @@
-# Terkeka RAG Retrieval Eval — Starter Repository v1
+# Terkeka RAG Retrieval Evaluation
 
-Companion repository for the Terkeka article **“When RAG Sounds Right but Retrieves Wrong.”**
+Reproducible retrieval-evaluation examples for Terkeka Article 01 — *When RAG Sounds Right but Retrieves Wrong*.
 
-The goal is to make a subtle RAG failure reproducible:
+**Terkeka owns the explanation. This repository owns the experiment.**
 
-```text
-Question → Retriever → Wrong Chunk → LLM → Confident Wrong Answer
+## Companion Article
+
+**When RAG Sounds Right but Retrieves Wrong**
+
+Canonical article: https://terkeka.com/<ARTICLE-01-SLUG>
+
+> This repository is a companion implementation for a Terkeka engineering article. The article explains the engineering problem and reasoning; this repository provides the reproducible dataset, code, metrics, tests, and results.
+
+## The Problem
+
+A fluent or apparently correct answer does not prove that a RAG pipeline retrieved the correct evidence. A large language model can sound confident while being grounded in the wrong chunk — or in no real evidence at all.
+
+**Failure path:**
+
+```mermaid
+flowchart LR
+    Q[Question] --> R[Retriever]
+    R --> W[Wrong Chunk]
+    W --> L[LLM / Answer Generator]
+    L --> A[Confident Wrong Answer]
 ```
 
-and contrast it with:
+**Success path:**
 
-```text
-Question → Retriever → Correct Chunk → LLM → Grounded Answer
+```mermaid
+flowchart LR
+    Q2[Question] --> R2[Retriever]
+    R2 --> C[Correct Chunk]
+    C --> L2[LLM / Answer Generator]
+    L2 --> G[Grounded Answer]
 ```
 
-This repository deliberately keeps the first version small and deterministic. It focuses on **retrieval evaluation** rather than model-provider integration so engineers can see whether the evidence pipeline is working before adding an LLM.
+Both paths can produce a fluent-sounding answer. Only retrieval evaluation tells you which path you were actually on.
 
-## What is included
+## Why Retrieval Evaluation Matters
 
-- A small synthetic document corpus
-- A labeled retrieval evaluation dataset
-- Deterministic keyword-based retrieval
-- Recall@K, MRR and NDCG@K implementations
-- A simple answer simulator to show how wrong evidence can produce a fluent wrong answer
-- Automated tests
-- Baseline evaluation results
-- GitHub Actions CI
+RAG quality is not one thing — it is several separable concerns:
 
-## Repository structure
+- **Retrieval quality** — did the retriever surface the right evidence?
+- **Grounding quality** — does the generated answer actually rely on that evidence?
+- **Reasoning quality** — did the model reason correctly over the evidence it was given?
+- **Answer quality** — does the final answer read as correct to a human reviewer?
+
+**Answer accuracy is not retrieval accuracy.** A model's prior knowledge can produce a correct-sounding answer even when the retriever handed it the wrong chunk — or nothing useful at all. That's the dangerous case: wrong retrieval plus an apparently correct answer, which masks a broken retriever until it fails on a question the model can't answer from prior knowledge alone.
+
+This repository isolates the first concern — retrieval quality — and evaluates it independently, against labeled evidence, before any answer is generated.
+
+## What This Repository Evaluates
+
+- Whether the correct document chunk(s) were identified for a given question
+- **Recall@K** — did the top K results contain the relevant evidence?
+- **MRR** — how early did the first relevant result appear?
+- **NDCG@K** — how good was the ranking order of relevant results?
+- Correct-vs-wrong retrieval behavior, including a real case where a semantically similar distractor outranks the correct chunk
+- Regression testing over a small labeled dataset
+
+## Repository Structure
 
 ```text
 terkeka-rag-retrieval-eval/
 ├── README.md
 ├── LICENSE
+├── CONTRIBUTING.md
 ├── pyproject.toml
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── data/
 │   ├── documents/corpus.json
 │   └── eval_dataset.json
-├── docs/
-│   ├── architecture.md
-│   └── evaluation-methodology.md
-├── diagrams/
-│   └── rag-retrieval-failure.mmd
-├── examples/
-│   ├── correct_retrieval.py
-│   └── wrong_retrieval.py
-├── results/
-│   └── baseline-results.md
 ├── src/terkeka_rag_eval/
 │   ├── __init__.py
 │   ├── cli.py
@@ -54,33 +81,55 @@ terkeka-rag-retrieval-eval/
 │   ├── metrics.py
 │   ├── models.py
 │   └── retrieval.py
-└── tests/
-    ├── test_metrics.py
-    └── test_retrieval.py
+├── examples/
+│   ├── correct_retrieval.py
+│   └── wrong_retrieval.py
+├── tests/
+│   ├── test_metrics.py
+│   └── test_retrieval.py
+├── docs/
+│   ├── architecture.md
+│   └── evaluation-methodology.md
+├── diagrams/
+│   └── rag-retrieval-failure.mmd
+└── results/
+    ├── baseline-results.md
+    └── baseline-results.json
 ```
 
-## Quick start
+## Quick Start
 
 Requires Python 3.11+.
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -e .[dev]
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
+
+pip install -e ".[dev]"
+
 pytest
 terkeka-rag-eval evaluate
 ```
 
-Run the two examples:
+`terkeka-rag-eval evaluate` is the CLI entry point defined in [`src/terkeka_rag_eval/cli.py`](src/terkeka_rag_eval/cli.py). It loads the corpus and labeled dataset, runs retrieval, and prints a JSON report. Useful flags:
+
+```bash
+terkeka-rag-eval evaluate -k 3 --json results/latest.json
+```
+
+## Run the Examples
 
 ```bash
 python examples/correct_retrieval.py
 python examples/wrong_retrieval.py
 ```
 
-## Evaluation dataset contract
+- **`correct_retrieval.py`** runs the deterministic retriever normally and shows it ranking the correct chunk first, followed by a simulated grounded answer.
+- **`wrong_retrieval.py`** forces a known-wrong chunk to the top of the ranking (via `retrieve_with_forced_wrong_chunk`) and shows that the same answer simulator still produces a fluent-sounding answer — demonstrating that answer appearance cannot be used as proof of retrieval correctness. No external LLM is called; the "answer" is a deterministic template over the top retrieved chunk.
 
-Each evaluation case names the expected evidence directly:
+## Evaluation Dataset
+
+Each evaluation case is a labeled retrieval example, not a production dataset:
 
 ```json
 {
@@ -92,33 +141,101 @@ Each evaluation case names the expected evidence directly:
 }
 ```
 
-That lets retrieval quality be measured independently from answer fluency.
+`relevant_chunk_ids` is the binary relevant set used for Recall@K and MRR. `relevance` is a graded-relevance map used for NDCG@K — it can also score a topically related but incorrect chunk (a distractor) above zero without treating it as a correct answer. The dataset (`data/eval_dataset.json`) deliberately includes:
+
+1. **Obvious correct retrieval** — direct questions with one unambiguous relevant chunk.
+2. **A semantically similar distractor** — `support-002` asks about a "non-critical" incident; the retriever has no notion of negation and ranks the "critical" incident chunk first.
+3. **A real wrong-retrieval risk** — the same `support-002` case: Recall@3 still succeeds (the right chunk is in the top 3), but MRR and NDCG@3 drop because it isn't ranked first.
+4. **Multiple relevant chunks** — `policy-003` has two chunks that both answer the question.
+5. **Ranking quality** — `support-002` again, since it is specifically a ranking-order failure, not a missing-evidence failure.
+
+See [`results/baseline-results.md`](results/baseline-results.md) for the actual measured outcome of each case.
 
 ## Metrics
 
 ### Recall@K
-Did at least one expected relevant chunk appear in the top K retrieved chunks?
+Did the retriever find relevant evidence in the top K results? A binary hit/miss signal per relevant chunk, aggregated over the query.
 
 ### MRR
-How early did the first relevant chunk appear?
+How early did the first relevant result appear? `1 / rank` of the first relevant chunk, `0` if none was found. Penalizes a correct chunk being buried behind irrelevant ones.
 
 ### NDCG@K
-How well did the ranking order match graded relevance judgments?
+How good was the ranked ordering of relevant results, using graded relevance? Rewards putting more relevant chunks earlier, and can distinguish "correct but poorly ranked" from "correct and well ranked" — which Recall@K alone cannot.
 
-## Core engineering lesson
+Implementations: [`src/terkeka_rag_eval/metrics.py`](src/terkeka_rag_eval/metrics.py). Unit tests, including edge cases (no relevant results, K exceeding result length, divide-by-zero guards): [`tests/test_metrics.py`](tests/test_metrics.py).
 
-A correct-looking answer is not proof of correct retrieval. Evaluate retrieval against labeled evidence before asking whether the final answer sounds right.
+## Baseline Results
 
-## Suggested next iterations
+> Toy baseline results from the included deterministic example corpus. These are not production benchmark claims.
 
-1. Add BM25, vector and hybrid retrievers.
-2. Add reranking.
-3. Add chunking experiments.
-4. Add metadata-filter regression cases.
-5. Add groundedness and citation evaluation.
-6. Add a provider adapter for Bedrock or another LLM.
-7. Add CI release thresholds for Recall@K/MRR/NDCG.
+Generated by actually running the evaluator against `data/eval_dataset.json` (8 cases, `top_k = 3`):
+
+| Metric        | Score |
+|---------------|-------|
+| Mean Recall@3 | 1.000 |
+| MRR           | 0.938 |
+| Mean NDCG@3   | 0.964 |
+
+MRR and NDCG@3 are below 1.0 specifically because of the `support-002` distractor case described above — the aggregate numbers reflect a real, reproducible ranking imperfection rather than a manufactured example. Full per-query results and commentary: [`results/baseline-results.md`](results/baseline-results.md) / [`results/baseline-results.json`](results/baseline-results.json).
+
+## Architecture
+
+```mermaid
+flowchart LR
+    Q[Question] --> R[Retriever]
+    R --> C[Retrieved Chunks]
+    C --> E[Retrieval Evaluator]
+    C --> A[Answer Generator]
+    A --> G[Answer / Grounding Evaluation]
+    D[Labeled Evaluation Dataset] --> E
+```
+
+Retrieval evaluation (`C → E`) runs independently of answer generation (`C → A → G`). This is the core architectural principle: retrieval evaluation must not depend on whether the final answer merely *looks* correct. Both branches consume the same retrieved chunks, but only one of them is compared against labeled ground truth. See [`docs/architecture.md`](docs/architecture.md) for more detail.
+
+## CI/CD
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every pull request and on pushes to `main`. It installs the project, runs `pytest`, and runs the evaluator against the labeled dataset, uploading the JSON report as a build artifact. It requires no secrets and no cloud credentials.
+
+**Future goal (not yet implemented):** retrieval evaluation can become a regression gate for changes to chunking, embeddings, metadata filters, retrieval algorithms, reranking, or knowledge-base contents — failing CI if Recall@K/MRR/NDCG@K drop below an accepted baseline. See [`docs/evaluation-methodology.md`](docs/evaluation-methodology.md) for an example threshold policy.
+
+## Educational Scope
+
+v1 intentionally uses a deterministic, keyword-overlap retriever (see [`src/terkeka_rag_eval/retrieval.py`](src/terkeka_rag_eval/retrieval.py)) so readers can understand the evaluation mechanics without needing cloud credentials, API keys, a vector database, or a paid LLM API. It is explicitly **not** a production retrieval implementation — it exists to make retrieval evaluation reproducible in a few minutes on a laptop.
+
+## Roadmap
+
+### v1 — Retrieval Evaluation Foundation (this repository)
+- Deterministic keyword-overlap retrieval
+- Labeled evaluation dataset
+- Recall@K, MRR, NDCG@K
+- Correct/wrong retrieval demonstrations
+- Automated tests
+- CI
+
+### v2 — Retrieval Strategy Comparison *(planned, not implemented)*
+- BM25
+- Embedding-based retrieval
+- Hybrid retrieval
+- Reranking
+- Retrieval strategy comparison
+
+### v3 — Production Evaluation *(planned, not implemented)*
+- Larger, versioned datasets
+- Experiment tracking
+- Retrieval regression gates in CI
+- Observability
+- CI/CD thresholds
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+## About Terkeka
+
+Terkeka is an engineering knowledge platform focused on AI, GenAI, RAG, evaluation, agentic systems, cloud architecture, and software engineering.
+
+**Engineering Knowledge, Shared Forward.**

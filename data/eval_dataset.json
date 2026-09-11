@@ -40,5 +40,22 @@
     "relevant_chunk_ids": ["support-critical-01"],
     "relevance": {"support-critical-01": 3},
     "expected_facts": ["Priority 1 incidents have a 15 minute initial response objective."]
+  },
+  {
+    "query_id": "policy-003",
+    "question": "What notice periods apply to the customer agreement?",
+    "relevant_chunk_ids": ["policy-cancel-01", "policy-renew-01"],
+    "relevance": {"policy-cancel-01": 3, "policy-renew-01": 3},
+    "expected_facts": [
+      "Cancellation requires 30 days notice.",
+      "Renewal can be stopped with 60 days notice."
+    ]
+  },
+  {
+    "query_id": "support-002",
+    "question": "What is the response time for a lower priority, non-critical incident?",
+    "relevant_chunk_ids": ["support-standard-01"],
+    "relevance": {"support-standard-01": 3, "support-critical-01": 1},
+    "expected_facts": ["Priority 3 incidents have a 4 business hour initial response objective."]
   }
 ]

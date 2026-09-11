@@ -1,9 +1,9 @@
 {
   "summary": {
-    "queries": 6,
+    "queries": 8,
     "mean_recall@3": 1.0,
-    "mrr": 1.0,
-    "mean_ndcg@3": 1.0
+    "mrr": 0.9375,
+    "mean_ndcg@3": 0.9637262176746082
   },
   "cases": [
     {
@@ -88,6 +88,35 @@
       ],
       "expected_ids": [
         "support-critical-01"
+      ]
+    },
+    {
+      "query_id": "policy-003",
+      "recall@3": 1.0,
+      "mrr": 1.0,
+      "ndcg@3": 1.0,
+      "retrieved_ids": [
+        "policy-renew-01",
+        "policy-cancel-01",
+        "billing-payment-01"
+      ],
+      "expected_ids": [
+        "policy-cancel-01",
+        "policy-renew-01"
+      ]
+    },
+    {
+      "query_id": "support-002",
+      "recall@3": 1.0,
+      "mrr": 0.5,
+      "ndcg@3": 0.7098097413968655,
+      "retrieved_ids": [
+        "support-critical-01",
+        "support-standard-01",
+        "policy-renew-01"
+      ],
+      "expected_ids": [
+        "support-standard-01"
       ]
     }
   ]

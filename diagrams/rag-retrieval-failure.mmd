@@ -1,10 +1,21 @@
 flowchart LR
-    Q[Question] --> R[Retriever]
-    R --> W[Wrong Chunk]
-    W --> L[LLM / Answer Generator]
-    L --> A[Confident Wrong Answer]
+    subgraph Failure Path
+        Q[Question] --> R[Retriever]
+        R --> W[Wrong Chunk]
+        W --> L[LLM / Answer Generator]
+        L --> A[Confident Wrong Answer]
+    end
 
-    Q2[Question] --> R2[Retriever]
-    R2 --> C[Correct Chunk]
-    C --> L2[LLM / Answer Generator]
-    L2 --> G[Grounded Answer]
+    subgraph Success Path
+        Q2[Question] --> R2[Retriever]
+        R2 --> C[Correct Chunk]
+        C --> L2[LLM / Answer Generator]
+        L2 --> G[Grounded Answer]
+    end
+
+    subgraph Evaluation Path
+        Q3[Question] --> R3[Retriever]
+        R3 --> RC[Retrieved Chunks]
+        RC --> EV[Retrieval Evaluation]
+        EV --> PF{Pass / Fail}
+    end
