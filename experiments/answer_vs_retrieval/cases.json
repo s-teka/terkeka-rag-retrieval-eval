@@ -1,0 +1,69 @@
+{
+  "cases": [
+    {
+      "case_id": "article02-case-a",
+      "question": "What is the cancellation notice period for Plan Alpha?",
+      "retrieved_chunk_ids": ["plan-alpha-cancel-01"],
+      "relevant_chunk_ids": ["plan-alpha-cancel-01"],
+      "expected_answer": "30 days",
+      "generated_answer": "30 days",
+      "expected_failure_mode": "HEALTHY_RAG"
+    },
+    {
+      "case_id": "article02-case-b",
+      "question": "What is the cancellation notice period for Plan Alpha?",
+      "retrieved_chunk_ids": ["plan-alpha-cancel-01"],
+      "relevant_chunk_ids": ["plan-alpha-cancel-01"],
+      "expected_answer": "30 days",
+      "generated_answer": "14 days",
+      "expected_failure_mode": "GENERATION_FAILURE"
+    },
+    {
+      "case_id": "article02-case-c",
+      "question": "What is the cancellation notice period for Plan Alpha?",
+      "retrieved_chunk_ids": ["product-orion-notice-01"],
+      "relevant_chunk_ids": ["plan-alpha-cancel-01"],
+      "expected_answer": "30 days",
+      "generated_answer": "90 days",
+      "expected_failure_mode": "RETRIEVAL_FAILURE"
+    },
+    {
+      "case_id": "article02-case-d",
+      "question": "What is the cancellation notice period for Plan Alpha?",
+      "retrieved_chunk_ids": ["plan-beta-cancel-01"],
+      "relevant_chunk_ids": ["plan-alpha-cancel-01"],
+      "expected_answer": "30 days",
+      "generated_answer": "30 days",
+      "expected_failure_mode": "CORRECT_ANSWER_WRONG_EVIDENCE"
+    }
+  ],
+  "evidence_ablation": [
+    {
+      "condition": "correct_evidence",
+      "question": "What is the cancellation notice period for Plan Alpha?",
+      "retrieved_chunk_ids": ["plan-alpha-cancel-01"],
+      "relevant_chunk_ids": ["plan-alpha-cancel-01"],
+      "expected_answer": "30 days",
+      "generated_answer": "30 days",
+      "expected_failure_mode": "HEALTHY_RAG"
+    },
+    {
+      "condition": "wrong_evidence",
+      "question": "What is the cancellation notice period for Plan Alpha?",
+      "retrieved_chunk_ids": ["plan-beta-cancel-01"],
+      "relevant_chunk_ids": ["plan-alpha-cancel-01"],
+      "expected_answer": "30 days",
+      "generated_answer": "30 days",
+      "expected_failure_mode": "CORRECT_ANSWER_WRONG_EVIDENCE"
+    },
+    {
+      "condition": "no_evidence",
+      "question": "What is the cancellation notice period for Plan Alpha?",
+      "retrieved_chunk_ids": [],
+      "relevant_chunk_ids": ["plan-alpha-cancel-01"],
+      "expected_answer": "30 days",
+      "generated_answer": "30 days",
+      "expected_failure_mode": "INSUFFICIENT_EVIDENCE"
+    }
+  ]
+}

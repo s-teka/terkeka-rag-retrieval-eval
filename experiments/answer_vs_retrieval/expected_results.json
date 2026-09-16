@@ -1,0 +1,55 @@
+{
+  "cases": {
+    "article02-case-a": {
+      "retrieval_pass": true,
+      "grounding_pass": true,
+      "answer_pass": true,
+      "overall_pass": true,
+      "failure_mode": "HEALTHY_RAG"
+    },
+    "article02-case-b": {
+      "retrieval_pass": true,
+      "grounding_pass": true,
+      "answer_pass": false,
+      "overall_pass": false,
+      "failure_mode": "GENERATION_FAILURE"
+    },
+    "article02-case-c": {
+      "retrieval_pass": false,
+      "grounding_pass": false,
+      "answer_pass": false,
+      "overall_pass": false,
+      "failure_mode": "RETRIEVAL_FAILURE"
+    },
+    "article02-case-d": {
+      "retrieval_pass": false,
+      "grounding_pass": false,
+      "answer_pass": true,
+      "overall_pass": false,
+      "failure_mode": "CORRECT_ANSWER_WRONG_EVIDENCE"
+    }
+  },
+  "evidence_ablation": {
+    "article02-ablation-correct_evidence": {
+      "retrieval_pass": true,
+      "grounding_pass": true,
+      "answer_pass": true,
+      "overall_pass": true,
+      "failure_mode": "HEALTHY_RAG"
+    },
+    "article02-ablation-wrong_evidence": {
+      "retrieval_pass": false,
+      "grounding_pass": false,
+      "answer_pass": true,
+      "overall_pass": false,
+      "failure_mode": "CORRECT_ANSWER_WRONG_EVIDENCE"
+    },
+    "article02-ablation-no_evidence": {
+      "retrieval_pass": false,
+      "grounding_pass": false,
+      "answer_pass": true,
+      "overall_pass": false,
+      "failure_mode": "INSUFFICIENT_EVIDENCE"
+    }
+  }
+}

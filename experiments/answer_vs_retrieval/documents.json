@@ -1,0 +1,26 @@
+[
+  {
+    "chunk_id": "plan-alpha-cancel-01",
+    "title": "Plan Alpha — Cancellation",
+    "text": "Plan Alpha requires 30 days notice before cancellation takes effect.",
+    "metadata": {"document": "plan-alpha", "section": "cancellation"}
+  },
+  {
+    "chunk_id": "plan-beta-cancel-01",
+    "title": "Plan Beta — Cancellation",
+    "text": "Plan Beta requires 14 days notice before cancellation takes effect.",
+    "metadata": {"document": "plan-beta", "section": "cancellation"}
+  },
+  {
+    "chunk_id": "product-orion-notice-01",
+    "title": "Product Orion — Change Notice",
+    "text": "Product Orion license changes require 90 days advance notice.",
+    "metadata": {"document": "product-orion", "section": "change-notice"}
+  },
+  {
+    "chunk_id": "service-nova-support-01",
+    "title": "Service Nova — Support Hours",
+    "text": "Service Nova support is available 24/7 for enterprise customers.",
+    "metadata": {"document": "service-nova", "section": "support-hours"}
+  }
+]

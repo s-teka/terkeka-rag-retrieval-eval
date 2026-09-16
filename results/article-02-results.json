@@ -1,0 +1,118 @@
+{
+  "four_controlled_cases": [
+    {
+      "case_id": "article02-case-a",
+      "retrieval": {
+        "pass": true
+      },
+      "grounding": {
+        "pass": true
+      },
+      "answer": {
+        "pass": true
+      },
+      "overall": {
+        "pass": true,
+        "failure_mode": "HEALTHY_RAG"
+      }
+    },
+    {
+      "case_id": "article02-case-b",
+      "retrieval": {
+        "pass": true
+      },
+      "grounding": {
+        "pass": true
+      },
+      "answer": {
+        "pass": false
+      },
+      "overall": {
+        "pass": false,
+        "failure_mode": "GENERATION_FAILURE"
+      }
+    },
+    {
+      "case_id": "article02-case-c",
+      "retrieval": {
+        "pass": false
+      },
+      "grounding": {
+        "pass": false
+      },
+      "answer": {
+        "pass": false
+      },
+      "overall": {
+        "pass": false,
+        "failure_mode": "RETRIEVAL_FAILURE"
+      }
+    },
+    {
+      "case_id": "article02-case-d",
+      "retrieval": {
+        "pass": false
+      },
+      "grounding": {
+        "pass": false
+      },
+      "answer": {
+        "pass": true
+      },
+      "overall": {
+        "pass": false,
+        "failure_mode": "CORRECT_ANSWER_WRONG_EVIDENCE"
+      }
+    }
+  ],
+  "evidence_ablation": [
+    {
+      "case_id": "article02-ablation-correct_evidence",
+      "retrieval": {
+        "pass": true
+      },
+      "grounding": {
+        "pass": true
+      },
+      "answer": {
+        "pass": true
+      },
+      "overall": {
+        "pass": true,
+        "failure_mode": "HEALTHY_RAG"
+      }
+    },
+    {
+      "case_id": "article02-ablation-wrong_evidence",
+      "retrieval": {
+        "pass": false
+      },
+      "grounding": {
+        "pass": false
+      },
+      "answer": {
+        "pass": true
+      },
+      "overall": {
+        "pass": false,
+        "failure_mode": "CORRECT_ANSWER_WRONG_EVIDENCE"
+      }
+    },
+    {
+      "case_id": "article02-ablation-no_evidence",
+      "retrieval": {
+        "pass": false
+      },
+      "grounding": {
+        "pass": false
+      },
+      "answer": {
+        "pass": true
+      },
+      "overall": {
+        "pass": false,
+        "failure_mode": "INSUFFICIENT_EVIDENCE"
+      }
+    }
+  ]
+}
