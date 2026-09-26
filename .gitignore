@@ -6,4 +6,6 @@ __pycache__/
 build/
 dist/
 results/latest.json
+results/article-02-latest.json
+results/article-02-latest.md
 .DS_Store

@@ -23,11 +23,21 @@ jobs:
         run: pip install -e .[dev]
       - name: Tests
         run: pytest
-      - name: Retrieval evaluation
+      - name: Retrieval evaluation (Article 01)
         run: terkeka-rag-eval evaluate -k 3 --json results/latest.json
+      - name: Answer-vs-retrieval experiment (Article 02)
+        run: terkeka-rag-eval article02 --json results/article-02-latest.json --markdown results/article-02-latest.md
       - name: Upload evaluation result
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: retrieval-eval-python-${{ matrix.python-version }}
           path: results/latest.json
+      - name: Upload Article 02 experiment result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: article-02-experiment-python-${{ matrix.python-version }}
+          path: |
+            results/article-02-latest.json
+            results/article-02-latest.md
