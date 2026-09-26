@@ -14,7 +14,9 @@ Canonical article: https://terkeka.com/articles/when-rag-sounds-right-but-retrie
 
 ### Article 02 — Why Answer Accuracy Is Not Retrieval Accuracy
 
-Status: companion experiment implemented in this repository; article forthcoming.
+Canonical article: https://terkeka.com/articles/why-answer-accuracy-is-not-retrieval-accuracy/
+
+> This repository is a companion implementation for a Terkeka engineering article. The article explains the engineering problem and reasoning; this repository provides the reproducible experiment, code, tests, and results.
 
 See [Article 02 — Answer Accuracy vs Retrieval Accuracy](#article-02--answer-accuracy-vs-retrieval-accuracy) below.
 
